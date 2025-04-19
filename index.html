@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kirthiga | AI Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+
+</head>
+<body>
+  <!-- 3D Particle Background -->
+  <div id="particles-js"></div>
+
+  <!-- Home Section -->
+  <section class="slide" id="home">
+    <h1>Welcome to My Portfolio</h1>
+    <img src="images/kirthiga-photo.jpg.jpg" alt="Kirthiga" class="profile-pic">
+    <a href="#about" class="button">View Portfolio</a>
+    <div class="arrow" onclick="scrollToSection('about')">&#x2193;</div>
+  </section>
+  
+  <!-- About Section -->
+  <section class="slide" id="about">
+    <h2>About Me</h2>
+    <p>I am currently pursuing B tech AI&DS course and interseted to continue my carrer as datascientist</p>
+    <a href="resume.pdf" class="resume-btn" download>Download Resume</a>
+    <div class="arrow" onclick="scrollToSection('skills')">↓</div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="slide" id="skills">
+    <h2>My Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-card"><i class="devicon-python-plain colored"></i><span>Python</span></div>
+      <div class="skill-card"><i class="devicon-html5-plain colored"></i><span>HTML</span></div>
+      <div class="skill-card"><i class="devicon-css3-plain colored"></i><span>CSS</span></div>
+      <div class="skill-card"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span></div>
+      <div class="skill-card"><i class="devicon-mysql-plain colored"></i><span>SQL</span></div>
+      <div class="skill-card"><i class="devicon-blockchain-plain colored"></i><span>Blockchain</span></div>
+      <div class="skill-card"><i class="devicon-tensorflow-original colored"></i><span>Machine Learning</span></div>
+    </div>
+    <div class="arrow" onclick="scrollToSection('projects')">&#x2193;</div>
+  </section>
+  
+  <!-- Projects Section -->
+  <section class="slide" id="projects">
+    <h2>My Projects</h2>
+    <div class="projects-grid">
+  
+      <div class="project-card">
+        <img src="images/careerpilot.png" alt="CareerPilot Pro">
+        <h3>CareerPilot Pro</h3>
+        <p>An AI-powered career mentor chatbot built with GPT and Blockchain-based credential verification.</p>
+      </div>
+  
+      <div class="project-card">
+        <img src="images/teachable-machine.png" alt="Teachable Machine">
+        <h3>Teachable Machine Model</h3>
+        <p>A machine learning model built using Google’s Teachable Machine for real-time gesture classification.</p>
+      </div>
+  
+      <div class="project-card">
+        <img src="images/sign-language.png" alt="Sign Language Detection">
+        <h3>Sign Language Detection</h3>
+        <p>AI system that interprets Indian Sign Language (ISL) using a CNN model and real-time webcam input.</p>
+      </div>
+  
+    </div>
+    <div class="arrow" onclick="scrollToSection('contact')">&#x2193;</div>
+  </section>
+  <section class="slide" id="contact">
+    <h2>Contact Me</h2>
+    <form class="contact-form" onsubmit="return false;">
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email ID" required>
+      <textarea placeholder="Your Query" rows="5" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+    <h3 class="thank-you">Thank You</h3>
+  </section>
+  
+  
+  <script src="script.js"></script>
+  <script src="particles-config.js"></script>
+</body>
+</html>
