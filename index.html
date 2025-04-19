@@ -4,85 +4,214 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kirthiga | AI Portfolio</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <!-- Three.js for 3D particle background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- GSAP for animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <!-- Typed.js for intro text effect -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <!-- Devicons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+  <style>
+    /* Reset & Base */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { overflow-x: hidden; color: #fff; background: #0a0a0a; }
+    nav { position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; z-index: 10; background: rgba(10,10,10,0.6); backdrop-filter: blur(10px); }
+    nav .logo { font-size: 1.5rem; font-weight: bold; color: #00fff7; }
+    nav ul { display: flex; gap: 1.5rem; }
+    nav ul li { list-style: none; }
+    nav ul li a { color: #fff; text-decoration: none; transition: color 0.3s; }
+    nav ul li a:hover { color: #00fff7; }
 
+    canvas#bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,10,0.6); z-index: -1; }
+    section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 1rem; scroll-margin-top: 80px; position: relative; }
+    /* Wave separators */
+    .wave { position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; }
+
+    h1, h2 { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0; }
+    p { font-size: 1.1rem; max-width: 600px; margin: 1rem auto; opacity: 0; }
+    .typed-cursor { font-size: 2rem; }
+
+    .button, .resume-btn, .contact-form button, .back-to-top { padding: 12px 24px; background: #00fff7; color: #000; border: none; border-radius: 12px; font-size: 1rem; cursor: pointer; text-decoration: none; transition: background 0.3s, transform 0.2s; }
+    .button:hover, .resume-btn:hover, .contact-form button:hover, .back-to-top:hover { background: #00c6b7; transform: translateY(-2px); }
+
+    .profile-pic { width: 180px; height: 180px; border-radius: 50%; border: 4px solid #00fff7; box-shadow: 0 0 20px #00fff7; object-fit: cover; margin-bottom: 1.5rem; opacity: 0; }
+
+    .skills-grid, .projects-grid { display: grid; gap: 2rem; margin-top: 2rem; justify-content: center; }
+    .skills-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+    .skill-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s, box-shadow 0.3s; opacity: 0; }
+    .skill-card:hover { transform: translateY(-5px); box-shadow: 0 0 20px #00fff7; }
+    .projects-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .project-card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 1.5rem; text-align: center; box-shadow: 0 0 10px #00fff7; transition: transform 0.3s, box-shadow 0.3s; opacity: 0; }
+    .project-card:hover { transform: translateY(-8px); box-shadow: 0 0 20px #00fff7; }
+    .project-card img { width: 100%; height: 160px; object-fit: contain; border-radius: 10px; margin-bottom: 1rem; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; max-width: 500px; width: 100%; margin: 2rem auto; opacity: 0; }
+    .contact-form input, .contact-form textarea { padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff; box-shadow: 0 0 8px #00fff7; }
+    .thank-you { margin-top: 2rem; font-size: 1.2rem; color: #00fff7; opacity: 0; transition: opacity 1s ease; }
+
+    footer { background: #111; padding: 2rem 1rem; text-align: center; }
+    .socials { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+    .socials a { color: #fff; font-size: 1.5rem; transition: color 0.3s; }
+    .socials a:hover { color: #00fff7; }
+    .footer-text { font-size: 0.9rem; color: #aaa; }
+
+    .back-to-top { position: fixed; bottom: 2rem; right: 2rem; display: none; z-index: 10; }
+  </style>
 </head>
 <body>
-  <!-- 3D Particle Background -->
-  <div id="particles-js"></div>
+  <canvas id="bg"></canvas>
+  <div class="overlay"></div>
+  <nav>
+    <div class="logo">Portfolio</div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
   <!-- Home Section -->
-  <section class="slide" id="home">
-    <h1>Welcome to My Portfolio</h1>
-    <img src="images/kirthiga-photo.jpg.jpg" alt="Kirthiga" class="profile-pic">
-    <a href="#about" class="button">View Portfolio</a>
-    <div class="arrow" onclick="scrollToSection('about')">&#x2193;</div>
+  <section id="home">
+    <h1 id="intro"></h1>
+    <img src="assets/kirthiga-photo.jpg" alt="Kirthiga" class="profile-pic">
+    <a href="#about" class="button">Explore More</a>
+    <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#111" fill-opacity="1" d="M0,224L60,208C120,192,240,160,360,154.7C480,149,600,171,720,186.7C840,203,960,213,1080,213.3C1200,213,1320,203,1380,197.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
   </section>
-  
+
   <!-- About Section -->
-  <section class="slide" id="about">
+  <section id="about">
     <h2>About Me</h2>
-    <p>I am currently pursuing B tech AI&DS course and interseted to continue my carrer as datascientist</p>
+    <p>I am pursuing a B.Tech in AI & DS with a passion for data science, eager to turn insights into impact.</p>
     <a href="resume.pdf" class="resume-btn" download>Download Resume</a>
-    <div class="arrow" onclick="scrollToSection('skills')">↓</div>
+    <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#0a0a0a" fill-opacity="1" d="M0,192L60,202.7C120,213,240,235,360,234.7C480,235,600,213,720,192C840,171,960,149,1080,154.7C1200,160,1320,192,1380,208L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
   </section>
 
   <!-- Skills Section -->
-  <section class="slide" id="skills">
+  <section id="skills">
     <h2>My Skills</h2>
     <div class="skills-grid">
       <div class="skill-card"><i class="devicon-python-plain colored"></i><span>Python</span></div>
-      <div class="skill-card"><i class="devicon-html5-plain colored"></i><span>HTML</span></div>
-      <div class="skill-card"><i class="devicon-css3-plain colored"></i><span>CSS</span></div>
+      <div class="skill-card"><i class="devicon-html5-plain colored"></i><span>HTML5</span></div>
+      <div class="skill-card"><i class="devicon-css3-plain colored"></i><span>CSS3</span></div>
       <div class="skill-card"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span></div>
       <div class="skill-card"><i class="devicon-mysql-plain colored"></i><span>SQL</span></div>
       <div class="skill-card"><i class="devicon-blockchain-plain colored"></i><span>Blockchain</span></div>
       <div class="skill-card"><i class="devicon-tensorflow-original colored"></i><span>Machine Learning</span></div>
     </div>
-    <div class="arrow" onclick="scrollToSection('projects')">&#x2193;</div>
+    <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#111" fill-opacity="1" d="M0,96L60,106.7C120,117,240,139,360,133.3C480,128,600,96,720,90.7C840,85,960,107,1080,106.7C1200,107,1320,85,1380,74.7L1440,64L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
   </section>
-  
+
   <!-- Projects Section -->
-  <section class="slide" id="projects">
+  <section id="projects">
     <h2>My Projects</h2>
     <div class="projects-grid">
-  
       <div class="project-card">
-        <img src="images/careerpilot.png" alt="CareerPilot Pro">
+        <img src="assets/careerpilot.png" alt="CareerPilot Pro">
         <h3>CareerPilot Pro</h3>
-        <p>An AI-powered career mentor chatbot built with GPT and Blockchain-based credential verification.</p>
+        <p>An AI-powered career mentor chatbot with blockchain credential verification.</p>
       </div>
-  
       <div class="project-card">
-        <img src="images/teachable-machine.png" alt="Teachable Machine">
+        <img src="assets/teachable-machine.png" alt="Teachable Machine">
         <h3>Teachable Machine Model</h3>
-        <p>A machine learning model built using Google’s Teachable Machine for real-time gesture classification.</p>
+        <p>Real-time gesture classification powered by Google’s Teachable Machine.</p>
       </div>
-  
       <div class="project-card">
-        <img src="images/sign-language.png" alt="Sign Language Detection">
+        <img src="assets/sign-language.png" alt="Sign Language Detection">
         <h3>Sign Language Detection</h3>
-        <p>AI system that interprets Indian Sign Language (ISL) using a CNN model and real-time webcam input.</p>
+        <p>An AI system interpreting Indian Sign Language via CNN and webcam input.</p>
       </div>
-  
     </div>
-    <div class="arrow" onclick="scrollToSection('contact')">&#x2193;</div>
+    <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#0a0a0a" fill-opacity="1" d="M0,192L60,165.3C120,139,240,85,360,80C480,75,600,117,720,133.3C840,149,960,139,1080,133.3C1200,128,1320,128,1380,128L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
   </section>
-  <section class="slide" id="contact">
+
+  <!-- Contact Section -->
+  <section id="contact">
     <h2>Contact Me</h2>
-    <form class="contact-form" onsubmit="return false;">
+    <form class="contact-form" onsubmit="showThankYou()">
       <input type="text" placeholder="Your Name" required>
       <input type="email" placeholder="Your Email ID" required>
       <textarea placeholder="Your Query" rows="5" required></textarea>
       <button type="submit">Send Message</button>
     </form>
-    <h3 class="thank-you">Thank You</h3>
+    <h3 class="thank-you" id="thankYouMsg">Thank You! I'll get back to you soon.</h3>
   </section>
-  
-  
-  <script src="script.js"></script>
-  <script src="particles-config.js"></script>
+
+  <footer>
+    <div class="socials">
+      <a href="https://www.linkedin.com/in/kirthiga15/" aria-label="LinkedIn"><i class="devicon-linkedin-plain"></i></a>
+      <a href="https://github.com/kirthi1215" aria-label="GitHub"><i class="devicon-github-plain"></i></a>
+    </div>
+    <div class="footer-text">&copy; 2025 Kirthiga. Built with ❤️ and AI.</div>
+  </footer>
+
+  <button class="back-to-top" onclick="scrollToSection('home')">&#8679;</button>
+
+  <script>
+    // Smooth scroll
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Show thank you message
+    function showThankYou() {
+      document.getElementById('thankYouMsg').classList.add('visible');
+      return false;
+    }
+
+    // Intersection Observer for reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          gsap.to(entry.target, { opacity: 1, y: 0, duration: 1 });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('h1, h2, p, .skill-card, .project-card, .profile-pic, .contact-form').forEach(el => {
+      gsap.set(el, {opacity: 0, y: 30}); observer.observe(el);
+    });
+
+    // Typed.js intro
+    new Typed('#intro', { strings: ['Hello, I\'m Kirthiga.', 'Data Scientist in making.', 'Welcome to my world.'], typeSpeed: 50, backSpeed: 30, backDelay: 2000, loop: true });
+
+    // Back-to-top visibility
+    const backToTop = document.querySelector('.back-to-top');
+    window.addEventListener('scroll', () => {
+      backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+
+    // Three.js 3D Particle Background
+    let scene, camera, renderer, particles;
+    function initParticles() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
+      camera.position.z = 200;
+
+      renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const geometry = new THREE.BufferGeometry(); const count = 6000;
+      const positions = new Float32Array(count * 3);
+      for (let i = 0; i < count * 3; i++) positions[i] = (Math.random() - 0.5) * 1000;
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      const material = new THREE.PointsMaterial({ size: 2, color: 0x00fff7, transparent: true, opacity: 0.7 });
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+
+      window.addEventListener('resize', onWindowResize);
+      document.addEventListener('mousemove', onMouseMove);
+      animateParticles();
+    }
+    function onWindowResize() { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
+    let mouseX = 0, mouseY = 0;
+    function onMouseMove(event) { mouseX = (event.clientX/window.innerWidth)*2-1; mouseY = -(event.clientY/window.innerHeight)*2+1; }
+    function animateParticles() { requestAnimationFrame(animateParticles); particles.rotation.y += 0.0005; camera.position.x += (mouseX*100 - camera.position.x)*0.05; camera.position.y += (mouseY*50 - camera.position.y)*0.05; camera.lookAt(scene.position); renderer.render(scene, camera); }
+    initParticles();
+  </script>
 </body>
 </html>
